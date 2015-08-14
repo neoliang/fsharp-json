@@ -1,0 +1,18 @@
+﻿<Properties StartupItem="Test/Test.fsproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="test.fs">
+    <Files>
+      <File FileName="JValue.fs" Line="32" Column="17" />
+      <File FileName="JValueVisitor.fs" Line="7" Column="37" />
+      <File FileName="render.fs" Line="32" Column="1" />
+      <File FileName="test.fs" Line="18" Column="28" />
+      <File FileName="Test/Program.fs" Line="6" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="../wx_new/old/wx_client/client/Assets/code/DB/DBConn.cs" line="35" offsetX="1300" offsetY="510" expression="strCommend" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+</Properties>
