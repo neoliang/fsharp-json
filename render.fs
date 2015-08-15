@@ -4,10 +4,7 @@ namespace fjson
 open System
 open System.Collections.Generic
 
-type JObjectRender =
-    abstract renderString: JObject -> string
-
-type internal RenderStrategy =
+type RenderTemplate =
     abstract sep : unit -> string
     abstract needNewLine: unit->bool
     abstract accNumber : double -> string
@@ -33,7 +30,7 @@ module private RenderHelper =
             mixedStr + endSep
         else
             mixedStr
-    let rec  render_ (this:JValue) (accept:RenderStrategy)  = 
+    let rec  render_ (this:JValue) (accept:RenderTemplate)  = 
       match this with
         | Number v -> accept.accNumber v
         | Str v -> accept.accString v
@@ -52,10 +49,9 @@ module private RenderHelper =
             let lo = Seq.map renderKV o
             let lostr = concatStr lo (accept.sep()) (accept.needNewLine())
             bStr + lostr + accept.endObject()
-
-open RenderHelper
+    
 type SimpleRender() =
-    interface RenderStrategy with
+    interface RenderTemplate with
         member this.accNumber x = string(x)
         member this.accBool x = if x then "true" else "false"
         member this.accString x = "\"" + x + "\""
@@ -67,14 +63,13 @@ type SimpleRender() =
         member this.endObject() = "}"
         member this.sep() = ","
         member this.needNewLine() = false
-    interface JObjectRender with
-        member this.renderString o = RenderHelper.render_ (Obj o) this
+
 
 type private RenderState =
     | RS_Array
     | RS_Object
 type PrettyRender(indent:int) =
-    let _simpleRender:RenderStrategy = new SimpleRender() :> RenderStrategy
+    let _simpleRender:RenderTemplate = new SimpleRender() :> RenderTemplate
     let mutable _currentPos = 0
     let _renderState = new Stack<RenderState>()
     let pushState s = _renderState.Push(s)
@@ -96,7 +91,7 @@ type PrettyRender(indent:int) =
             | RS_Array -> this.currentSpace + f()
             | _ -> f()
     
-    interface RenderStrategy with
+    interface RenderTemplate with
         member this.accNumber x =
             this.addIndent (fun() -> _simpleRender.accNumber x)
         member this.accBool x = 
@@ -128,7 +123,7 @@ type PrettyRender(indent:int) =
         member this.sep() = ","
         member this.needNewLine() = true
 
-    interface JObjectRender with
-        member this.renderString o = RenderHelper.render_ (Obj o) this
-
-    
+module render =
+    let custom o (template:RenderTemplate) = RenderHelper.render_ (Obj o) template
+    let simple o = custom o (new SimpleRender())
+    let pretty o indent = custom o (new PrettyRender(indent))

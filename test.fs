@@ -28,6 +28,7 @@ module Main =
         ls1.Add(Obj (new JObject()))
         ls.Add(Arr ls1)
         o.Add("ls",Arr ls)
-        let renders = [new SimpleRender() :> JObjectRender ; new PrettyRender(2) :> JObjectRender]
-        let results = Seq.map (fun (r:JObjectRender) -> r.renderString o ) renders
+        let flip f x y = f y x
+        let renders = [render.simple;  flip render.pretty 2]
+        let results = Seq.map (fun r -> r o ) renders
         Seq.iter (fun str -> printfn "%s" str) results
