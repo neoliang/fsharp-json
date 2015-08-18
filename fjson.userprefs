@@ -3,9 +3,8 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="test.fs">
     <Files>
       <File FileName="JValue.fs" Line="32" Column="17" />
-      <File FileName="JValueVisitor.fs" Line="7" Column="37" />
-      <File FileName="render.fs" Line="32" Column="1" />
-      <File FileName="test.fs" Line="18" Column="28" />
+      <File FileName="render.fs" Line="129" Column="35" />
+      <File FileName="test.fs" Line="31" Column="23" />
       <File FileName="Test/Program.fs" Line="6" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>

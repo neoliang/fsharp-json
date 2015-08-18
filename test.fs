@@ -29,6 +29,9 @@ module Main =
         ls.Add(Arr ls1)
         o.Add("ls",Arr ls)
         let flip f x y = f y x
-        let renders = [render.simple;  flip render.pretty 2]
+        let renders = [render.simple]
         let results = Seq.map (fun r -> r o ) renders
         Seq.iter (fun str -> printfn "%s" str) results
+        let x = render.simple(o)
+        let y = parser.read(x) |> render.simple
+        printfn "%s" y

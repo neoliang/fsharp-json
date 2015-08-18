@@ -15,7 +15,7 @@ type JValue =
   | Null
 
   member private v.getValueException (t:string) = 
-    raise (JValueConvertException("can't convert " + v.ToString() + "to " + t))
+    (JValueConvertException("can't convert " + v.ToString() + "to " + t))
 
   //type check
   member v.isNull() =
