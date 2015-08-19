@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="JValue.fs" />
     <Compile Include="render.fs" />
+    <Compile Include="parserHelper.fs" />
     <Compile Include="parser.fs" />
     <Compile Include="test.fs" />
   </ItemGroup>

@@ -3,7 +3,7 @@
 namespace fjson
 open System
 open System.Collections.Generic
-
+open parserHelper
 module Main =
     let main() =
         let o = new JObject()
@@ -28,10 +28,17 @@ module Main =
         ls1.Add(Obj (new JObject()))
         ls.Add(Arr ls1)
         o.Add("ls",Arr ls)
-        let flip f x y = f y x
-        let renders = [render.simple]
-        let results = Seq.map (fun r -> r o ) renders
-        Seq.iter (fun str -> printfn "%s" str) results
-        let x = render.simple(o)
-        let y = parser.read(x) |> render.simple
-        printfn "%s" y
+//        let flip f x y = f y x
+//        let renders = [render.simple]
+//        let results = Seq.map (fun r -> r o ) renders
+//        Seq.iter (fun str -> printfn "%s" str) results
+//        let x = render.simple(o)
+//        let y = parser.read(x) |> render.simple
+//        printfn "%s" y
+        let strs = [
+            "hello world";
+            "\"\"xxxyy";
+            "\"hello 123world !!\"123";
+        ]
+        let printPaser x = printfn "%A\n" x
+        Seq.iter (fun str -> printPaser (smartStr (List.ofSeq str)) )strs
