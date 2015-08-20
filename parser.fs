@@ -25,18 +25,18 @@ module Formmater =
             ret (Obj (Seq.fold addKV (new JObject()) kvs))
         )
     and  readKeyValues = 
-        let readkv = cons (token smartStr)(fun k->
-            cons (token (char ':')) (fun _->
-                cons (token (readValue)) (fun v->
-                    ret (string(k),v)
-                )
-            )
-        )
         many (cons readkv (fun kv ->
             cons (select (token (char ',')) (ret ',')) (fun _->
                 ret kv
             )
         ))
+    and readkv = cons (token smartStr)(fun k->
+            cons (token (char ':')) (fun _->
+                cons (token (readValue)) (fun v->
+                    ret (list2str k,v)
+                )
+            )
+        )
     and readValue = selects [readObject;readArray;readBool;readNumber;readString;readNull]
     and readArray = 
         let parserArray = cons (token (char '[')) (fun _ ->
@@ -49,10 +49,12 @@ module Formmater =
             )
         )
         cons parserArray (fun vs ->
-            ret (Arr (List vs))
+            cons (char ']') (fun _ ->
+                ret (Arr (List vs))
+            )
         )
     and readBool = cons (select (token (str "true")) (token (str "false"))) (fun r->
-            if r.Equals("true") then
+            if r.Equals(List.ofSeq "true") then
                 ret (Bool true)
             else
                 ret (Bool false)
@@ -69,8 +71,8 @@ module Formmater =
     let read (str:string) =
         let r = readObject (List.ofSeq str)
         match r with
-        | Some(obj,_) -> obj
-        | _ -> raise (ParserException("parser error"))
+        | PR(obj,_) -> obj
+        | PError e -> raise (ParserException (list2str e))
 module simple = 
     let private createParserExceptoin str = ParserException(str)
     let private matchCh (ch:char) = fun x -> 

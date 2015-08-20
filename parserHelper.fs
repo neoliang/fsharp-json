@@ -3,17 +3,29 @@
 namespace fjson.parser
 open System
 
+type ParserResult<'a> = 
+    | PR of 'a
+    | PError of char list
+    override  this.ToString() =
+        match this with
+        | PR x -> "PR" + x.ToString()
+        | PError x -> "Error" + String.Concat(x)
+
 module Helper =
+    let isNone x = 
+        match x with
+        | PError _ -> true
+        | _ -> false
     let item inp =
         match inp with
-        |[] -> None
-        | x::xs -> Some (x,xs)
-    let ret x = fun inp -> Some(x,inp)
-    let failure = fun inp -> None
+        |[] -> PError inp
+        | x::xs -> PR (x,xs)
+    let ret x = fun inp -> PR(x,inp)
+    let failure = fun inp -> PError inp
     let cons x y = fun inp ->
         match x inp with
-        |None -> None
-        |Some(a,out) ->  (y a) out
+        |PError e -> PError e
+        |PR(a,out) ->  (y a) out
     let sat f = 
         cons item (fun x ->
             if f x then
@@ -25,8 +37,8 @@ module Helper =
     let chars ch = fun inp ->
         let r = char ch inp
         match r with
-        |Some(x,xs) -> Some([x],xs)
-        |None -> None
+        |PR(x,xs) -> PR([x],xs)
+        |PError e -> PError e
     let str ss =
         let rec _str ss =
             match ss with
@@ -40,15 +52,15 @@ module Helper =
         _str (List.ofSeq ss)
     let select x y = fun inp ->
         match x inp with
-        | None -> y inp
-        | Some(v,out) -> Some(v,out)
+        | PError _ -> y inp
+        | PR(v,out) -> PR(v,out)
     let rec selects fs = fun (inp:char list) ->
         match fs with
-        | [] -> None
+        | [] -> PError inp
         | x::xs ->
             match x inp with
-            |Some(v,out) -> Some(v,out)
-            |None -> selects xs inp
+            |PR(v,out) -> PR(v,out)
+            |PError _ -> selects xs inp
     
     let repeat n f =
         let rec _repeat n f rs =

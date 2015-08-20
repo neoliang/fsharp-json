@@ -6,8 +6,26 @@ open System.Collections.Generic
 open NUnit.Framework
 open FsUnit
 open fjson
+open fjson.parser
+open fjson.parser.Helper
 open fjson.parser.Formmater
 type JsonParserTest() = 
+
+    let  _c r ls = r (List.ofSeq ls)
+    [<Test>]
+    member x. `` read array `` () = 
+        let ra = _c readArray
+        ra "[]" |> should equal ( PR (Arr (new List<JValue>()),List.ofSeq ""))
+    [<Test>]
+    member x. ``read simple value`` () =
+        let rb = _c readBool 
+        rb "true" |> should  equal (PR (Bool true ,List.ofSeq "") )
+        rb "false" |> should equal (PR (Bool false ,List.ofSeq ""))
+        rb "True" |> isNone |> should be True
+        rb "aaa" |> isNone |> should be True
+        let rs = _c readString
+        rs "  \"hello\"" |> should equal (PR (Str "hello" ,List.ofSeq ""))
+        rs "\"hello\"," |> should equal (PR (Str "hello" ,List.ofSeq ","))
     [<Test>]
     member x.``test read`` () =
         let o = new JObject()

@@ -14,6 +14,14 @@ type JValue =
   | Arr of List<JValue>
   | Null
 
+  override  this.ToString() =
+    match this with
+    | Null  -> "Null"
+    | Number x -> x.ToString()
+    | Str  x -> x.ToString()
+    | Bool  x -> x.ToString()
+    | Obj  x -> x.ToString()
+    | Arr  x -> x.ToString()
   member private v.getValueException (t:string) = 
     (JValueConvertException("can't convert " + v.ToString() + "to " + t))
 

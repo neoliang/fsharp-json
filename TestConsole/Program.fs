@@ -4,6 +4,7 @@ open System
 open System.Collections.Generic
 open fjson
 open fjson.parser.Formmater
+open fjson.parser.Helper
 [<EntryPoint>]
 let main argv = 
 
@@ -30,8 +31,10 @@ let main argv =
         ls1.Add(Obj (new JObject()))
         ls.Add(Arr ls1)
         o.Add("ls",Arr ls)
-        let ss = render.simple (Obj o)
+        let ss = render.pretty (Obj o) 2
         let xx = read ss
-        printfn "%s %A %f" ss xx (double "47")
+        let yy = render.pretty xx 4
+        //let xx =  readBool (List.ofSeq "true") //|> should  equal (Some (Bool true ,List.ofSeq "") )
+        printfn "%s \n %s" ss  yy
     ``test read``()
     0
