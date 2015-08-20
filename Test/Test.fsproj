@@ -3,8 +3,8 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1B849215-94DC-484E-AD88-173DED0BAE21}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{9577C898-DE7B-43AE-A063-EF32F40D1F02}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <RootNamespace>Test</RootNamespace>
     <AssemblyName>Test</AssemblyName>
   </PropertyGroup>
@@ -14,7 +14,7 @@
     <OutputPath>bin\Debug</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <Externalconsole>true</Externalconsole>
+    <ConsolePause>false</ConsolePause>
     <PlatformTarget>
     </PlatformTarget>
   </PropertyGroup>
@@ -23,7 +23,7 @@
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
-    <Externalconsole>true</Externalconsole>
+    <ConsolePause>false</ConsolePause>
     <GenerateTailCalls>true</GenerateTailCalls>
     <PlatformTarget>
     </PlatformTarget>
@@ -34,10 +34,22 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="FsUnit.CustomMatchers">
+      <HintPath>..\packages\FsUnit.1.3.1.0\lib\FsUnit.CustomMatchers.dll</HintPath>
+    </Reference>
+    <Reference Include="FsUnit.NUnit">
+      <HintPath>..\packages\FsUnit.1.3.1.0\lib\FsUnit.NUnit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="Component1.fs" />
+    <Compile Include="Script.fsx" />
+    <Compile Include="paserHelperTest.fs" />
+    <Compile Include="JsonParserTest.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
   <ItemGroup>
@@ -45,5 +57,8 @@
       <Project>{A571EE3C-F98A-486D-ADBE-691602E2F9D9}</Project>
       <Name>fjson</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -1,9 +1,9 @@
 ﻿
 
-namespace fjson
+namespace fjson.parser
 open System
 
-module parserHelper =
+module Helper =
     let item inp =
         match inp with
         |[] -> None
@@ -27,15 +27,17 @@ module parserHelper =
         match r with
         |Some(x,xs) -> Some([x],xs)
         |None -> None
-    let rec str ss =
-        match ss with
-        | [] -> ret []
-        | x::xs ->
-            cons (char x) (fun _ ->
-                cons (str xs) (fun _ ->
-                    ret (x::xs)
+    let str ss =
+        let rec _str ss =
+            match ss with
+            | [] -> ret []
+            | x::xs ->
+                cons (char x) (fun _ ->
+                    cons (_str xs) (fun _ ->
+                        ret (x::xs)
+                    )
                 )
-            )
+        _str (List.ofSeq ss)
     let select x y = fun inp ->
         match x inp with
         | None -> y inp
@@ -66,20 +68,22 @@ module parserHelper =
             )
         )
     let space = many (sat (fun ch -> ch = ' ' || ch = '\n'))
-    let private digits = many1 (sat Char.IsNumber)
-    let private digits1_9 = many1 (sat (fun ch -> (Char.IsNumber ch) && ch <> '0'))
-    let private part1NE =
+    let digits = many1 (sat Char.IsNumber)
+    let digit1_9 = sat (fun ch -> (Char.IsNumber ch) && ch <> '0')
+    let part1NE =
         let minusSign = select (chars '-') (ret [])
         cons minusSign (fun ch ->
-            let signZero = cons (chars '0') (fun z -> ret (ch @ z))
-            select signZero (cons digits1_9 (fun digs ->
+            let part11 = select (chars '0') (cons digit1_9 (fun dig ->
                     cons digits (fun digs1 ->
-                        ret (ch @ digs @ digs1)
+                        ret ([dig] @ digs1)
                     )
                 )
             )
+            cons part11 (fun p11 ->
+                ret (ch @ p11)
+            )
         )
-    let private part2NE =
+    let part2NE =
         let dotDigits = 
             cons (char '.') (fun ch ->
                 cons digits (fun num ->
@@ -87,7 +91,7 @@ module parserHelper =
                 )
             )
         select dotDigits (ret [])
-    let private part3NE =
+    let part3NE =
         let eExpr = select (char 'e') (char 'E')
         let signExp = select (char '+') (char '-')
         let eParts = cons eExpr (fun e->
@@ -113,7 +117,7 @@ module parserHelper =
             )
         )
     let hexaDecimal = 
-        let isHex ch = (Char.IsNumber ch ) && ( ('a' <= ch && ch <= 'F') || ('A' <= ch && ch <= 'F') )
+        let isHex ch = (Char.IsNumber ch ) || ( ('a' <= ch && ch <= 'f') || ('A' <= ch && ch <= 'F') )
         repeat 4 (sat isHex)
     let quoteHexDecimal =
         cons (char 'u') (fun ch ->
@@ -129,7 +133,12 @@ module parserHelper =
                         ret ([ch] @ cs)
                     )
             )
-        many1 (select specialStr (many1 (sat (fun ch-> ch <> '"' && ch <> '\\'))))
+        let oneChars = cons (sat (fun ch-> ch <> '"' && ch <> '\\')) (fun ch ->
+                ret [ch]
+            )
+        cons (many1 (select specialStr oneChars)) (fun rs ->
+            ret (List.ofSeq (Seq.concat rs))
+        )
     let quoteStr = 
         cons (char '"') (fun _ ->
             cons (select unQuoteStr (ret [])) (fun xs->

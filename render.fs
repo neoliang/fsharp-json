@@ -124,6 +124,6 @@ type PrettyRender(indent:int) =
         member this.needNewLine() = true
 
 module render =
-    let custom o (template:RenderTemplate) = RenderHelper.render_ (Obj o) template
+    let custom o (template:RenderTemplate) = RenderHelper.render_  o template
     let simple o = custom o (new SimpleRender())
     let pretty o indent = custom o (new PrettyRender(indent))

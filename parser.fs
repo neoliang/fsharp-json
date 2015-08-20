@@ -1,13 +1,76 @@
 ﻿
 
-namespace fjson
+namespace fjson.parser
 open System
 open System.Collections.Generic
-
+open fjson
 
 exception ParserException of string
 
-module parser = 
+open Helper
+module Formmater =
+    let rec readObject = 
+        let parserObject = cons (token (char '{')) (fun _->
+                cons readKeyValues (fun kvs->
+                    cons (token (char '}')) (fun _->
+                        ret kvs
+                    )
+                )
+            )
+        cons parserObject (fun kvs ->
+            let addKV (obj:JObject) (k,v) = 
+                    obj.Add(k,v)
+                    obj
+            ret (Obj (Seq.fold addKV (new JObject()) kvs))
+        )
+    and  readKeyValues = 
+        let readkv = cons (token smartStr)(fun k->
+            cons (token (char ':')) (fun _->
+                cons (token (readValue)) (fun v->
+                    ret (string(k),v)
+                )
+            )
+        )
+        many (cons readkv (fun kv ->
+            cons (select (token (char ',')) (ret ',')) (fun _->
+                ret kv
+            )
+        ))
+    and readValue = selects [readObject;readArray;readBool;readNumber;readString;readNull]
+    and readArray = 
+        let parserArray = cons (token (char '[')) (fun _ ->
+            many (cons readValue (fun v ->
+                cons (select (token (chars ',')) space) (fun _ ->
+                        ret v
+                    )
+
+                )
+            )
+        )
+        cons parserArray (fun vs ->
+            ret (Arr (List vs))
+        )
+    and readBool = cons (select (token (str "true")) (token (str "false"))) (fun r->
+            if r.Equals("true") then
+                ret (Bool true)
+            else
+                ret (Bool false)
+        )
+    and readNumber = cons (token numbers) (fun n ->
+            ret (Number (double (string n)))
+        )
+    and readString = cons (token quoteStr) (fun s->
+            ret (Str (string s))
+        )
+    and readNull = cons (token (str "null")) (fun _ ->
+            ret Null
+        )
+    let read (str:string) =
+        let r = readObject (List.ofSeq str)
+        match r with
+        | Some(obj,_) -> obj
+        | _ -> raise (ParserException("parser error"))
+module simple = 
     let private createParserExceptoin str = ParserException(str)
     let private matchCh (ch:char) = fun x -> 
         if x = ch then 
