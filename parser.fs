@@ -9,6 +9,7 @@ exception ParserException of string
 
 open Helper
 module Formmater =
+    let list2str (ls: char list) = String.Concat ls
     let rec readObject = 
         let parserObject = cons (token (char '{')) (fun _->
                 cons readKeyValues (fun kvs->
@@ -57,10 +58,10 @@ module Formmater =
                 ret (Bool false)
         )
     and readNumber = cons (token numbers) (fun n ->
-            ret (Number (double (string n)))
+            ret (Number (double (list2str n)))
         )
     and readString = cons (token quoteStr) (fun s->
-            ret (Str (string s))
+            ret (Str (list2str s))
         )
     and readNull = cons (token (str "null")) (fun _ ->
             ret Null

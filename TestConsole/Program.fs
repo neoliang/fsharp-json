@@ -1,15 +1,13 @@
-﻿
-
-namespace Test
+﻿// Learn more about F# at http://fsharp.net
+// See the 'F# Tutorial' project for more help.
 open System
 open System.Collections.Generic
-open NUnit.Framework
-open FsUnit
 open fjson
 open fjson.parser.Formmater
-type JsonParserTest() = 
-    [<Test>]
-    member x.``test read`` () =
+[<EntryPoint>]
+let main argv = 
+
+    let ``test read`` () =
         let o = new JObject()
         o.Add("hello",Str "world")
         o.Add("neo",Number 47.0)
@@ -33,4 +31,7 @@ type JsonParserTest() =
         ls.Add(Arr ls1)
         o.Add("ls",Arr ls)
         let ss = render.simple (Obj o)
-        read ss |> should be (sameAs (Obj o))
+        let xx = read ss
+        printfn "%s %A %f" ss xx (double "47")
+    ``test read``()
+    0
