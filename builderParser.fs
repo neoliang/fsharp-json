@@ -10,9 +10,7 @@ open Helper
 module formmater =
     let list2str (ls: char list) = String.Concat ls
     let _b = new parserHelperBuilder()
-    let rec readObject = 
-
-        _b{
+    let rec readObject = _b{
             let! _ = _b.token (_b.char '{')
             let! kvs = readKeyValues
             let! _ = _b.token ( _b.char '}')
@@ -21,24 +19,19 @@ module formmater =
                     obj
             return (Obj (Seq.fold addKV (new JObject()) kvs))    
         }
-
-    and  readKeyValues = 
-        many (_b{
+    and  readKeyValues = many (_b{
             let! kv = readkv
             let! _ = _b.select (_b.token (_b.char ',')) (_b.Return ',')
             return kv
         })
-
-    and readkv = 
-        _b{
+    and readkv = _b{
             let! k = _b.token _b.smartStr
             let! _ = _b.token (_b.char ':')
             let! v = _b.token readValue
             return (list2str k,v)
         }
     and readValue = _b.selects [readObject;readArray;readBool;readNumber;readString;readNull]
-    and readArray = 
-        _b{
+    and readArray = _b{
             let! _ = _b.token (_b.char '[')
             let! vs = many(_b{
                 let! v = readValue
@@ -49,29 +42,22 @@ module formmater =
             let! _ = _b.token (_b.char ']')
             return (Arr (List vs))
         }
-
-    and readBool = 
-        _b{
+    and readBool = _b{
             let! r = select (token (str "true")) (token (str "false"))
             if r.Equals(List.ofSeq "true") then
                 return (Bool true)
             else
                 return (Bool false)
         }
-    and readNumber = 
-        _b{
+    and readNumber = _b{
             let! n = _b.token _b.numbers
             return (Number (double (list2str n)))
         }
-
-    and readString = 
-        _b{
+    and readString = _b{
             let! s = _b.token _b.quoteStr
             return (Str (list2str s))
         }
-
-    and readNull =
-        _b{
+    and readNull = _b{
             let! _ = _b.token (_b.str "null")
             return Null
         }
