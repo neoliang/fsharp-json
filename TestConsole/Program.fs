@@ -41,6 +41,7 @@ let main argv =
         let parserHex  xs = builder.hexaDecimal (List.ofSeq xs)
         let y = parserHex "1234fx"
         let i = builder.char 'h' (List.ofSeq "xhello")
+        let builder = new parser.parserHelperBuilder()
         let x = builder.Return(PError (List.ofSeq "hello")) "xx"
         printfn "%A\n%A\n%A" y i x
 
