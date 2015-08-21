@@ -5,7 +5,7 @@ open System
 open System.IO
 open fjson.parser
 open fjson.render
-module SimpleIO =
+module simpleIO =
     let readFile (f:string) = 
         use sr = new StreamReader(f)
         let content = sr.ReadToEnd()

@@ -34,7 +34,7 @@ let main argv =
         o.Add("ls",Arr ls)
         let ss = render.pretty (Obj o) 2
         let xx = formmater.read ss
-        let yy = render.pretty xx 4
+        let yy = render.simple xx
         let xx1 = Formmater.read yy
         let yy1 = render.pretty xx1 2
         //let xx =  readBool (List.ofSeq "true") //|> should  equal (Some (Bool true ,List.ofSeq "") )
