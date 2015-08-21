@@ -15,7 +15,12 @@ type JsonParserTest() =
     [<Test>]
     member x. `` read array `` () = 
         let ra = _c readArray
-        ra "[]" |> should equal ( PR (Arr (new List<JValue>()),List.ofSeq ""))
+        [1;2] |> should equal [1;2]
+        Some (new List<int>()) |> should equal (Some(new List<int>()))
+        (new List<JValue>()).Equals((new List<JValue>())) |> should be True
+//        PR (new List<JValue>()) |> should equal (PR (new List<JValue>()))
+//        ra "[]" |> should equal ( PR (Arr (new List<JValue>()),List.ofSeq ""))
+    
     [<Test>]
     member x. ``read simple value`` () =
         let rb = _c readBool 
@@ -26,6 +31,7 @@ type JsonParserTest() =
         let rs = _c readString
         rs "  \"hello\"" |> should equal (PR (Str "hello" ,List.ofSeq ""))
         rs "\"hello\"," |> should equal (PR (Str "hello" ,List.ofSeq ","))
+
     [<Test>]
     member x.``test read`` () =
         let o = new JObject()
