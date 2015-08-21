@@ -33,10 +33,12 @@ let main argv =
         ls.Add(Arr ls1)
         o.Add("ls",Arr ls)
         let ss = render.pretty (Obj o) 2
-        let xx = read ss
+        let xx = formmater.read ss
         let yy = render.pretty xx 4
+        let xx1 = Formmater.read yy
+        let yy1 = render.pretty xx1 2
         //let xx =  readBool (List.ofSeq "true") //|> should  equal (Some (Bool true ,List.ofSeq "") )
-        printfn "%s \n %s" ss  yy
+        printfn "%s\n%s\n%s %A" ss  yy yy1 (ss = yy1)
         let builder = new parser.parserHelperBuilder()
         let parserHex  xs = builder.hexaDecimal (List.ofSeq xs)
         let y = parserHex "1234fx"
