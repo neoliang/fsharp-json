@@ -7,12 +7,12 @@ open NUnit.Framework
 open FsUnit
 open fjson
 open fjson.parser
-open fjson.parser.Helper
+open fjson.parser.Lexer
 
 type ParserHelperBuilderTest() = 
     let mySome a b = PR (List.ofSeq a, List.ofSeq b)
     let equalSome a = equal (PR a)
-    let builder = new parserHelperBuilder()
+    let builder = new LexerBuilder()
     [<Test>]
     member x.testItem() = 
         builder.item (List.ofSeq "hello") |> should equal (PR('h',List.ofSeq "ello"))

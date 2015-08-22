@@ -4,19 +4,16 @@ namespace fjson.parser
 open System
 open System.Collections.Generic
 open fjson
-
-
-open Helper
 module formmater =
     let list2str (ls: char list) = String.Concat ls
-    let _b = new parserHelperBuilder()
+    let _b = new LexerBuilder()
     let rec readObject = _b{
             let! _ = _b.token (_b.char '{')
             let! kvs = readKeyValues
             let! _ = _b.token ( _b.char '}')
             return (JValue.createObj kvs)  
         }
-    and  readKeyValues = many (_b{
+    and  readKeyValues = _b.many (_b{
             let! kv = readkv
             let! _ = _b.select (_b.token (_b.char ',')) (_b.Return ',')
             return kv
@@ -30,7 +27,7 @@ module formmater =
     and readValue = _b.selects [readObject;readArray;readBool;readNumber;readString;readNull]
     and readArray = _b{
             let! _ = _b.token (_b.char '[')
-            let! vs = many(_b{
+            let! vs = _b.many(_b{
                 let! v = readValue
                 let! _ = _b.select (_b.token (_b.chars ',')) _b.whiteSpace
                 return v
@@ -40,7 +37,7 @@ module formmater =
             return (JValue.createArr vs)
         }
     and readBool = _b{
-            let! r = select (token (str "true")) (token (str "false"))
+            let! r = _b.select (_b.token (_b.str "true")) (_b.token (_b.str "false"))
             if r.Equals(List.ofSeq "true") then
                 return (Bool true)
             else

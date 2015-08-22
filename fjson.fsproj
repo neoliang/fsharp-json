@@ -39,12 +39,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JValue.fs" />
+    <Compile Include="Lexer.fs" />
     <Compile Include="render.fs" />
-    <Compile Include="parserHelper.fs" />
-    <Compile Include="parserHelperBuilder.fs" />
     <Compile Include="parser.fs" />
     <Compile Include="builderParser.fs" />
-    <Compile Include="test.fs" />
     <Compile Include="IO.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />

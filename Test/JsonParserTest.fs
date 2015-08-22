@@ -7,7 +7,7 @@ open NUnit.Framework
 open FsUnit
 open fjson
 open fjson.parser
-open fjson.parser.Helper
+open fjson.parser.Lexer
 open fjson.parser.Formmater
 type JsonParserTest() = 
 

@@ -7,7 +7,7 @@ open fjson
 
 exception ParserException of string
 
-open Helper
+open Lexer
 module Formmater =
     let list2str (ls: char list) = String.Concat ls
     let rec readObject = 
