@@ -32,7 +32,6 @@ type JValue =
     Obj (Seq.fold addKV (new JObject()) kvs) 
   static member createArr (vs: JValue seq) = 
     Arr (List vs)
-
   //type check
   member v.isNull() =
     match v with

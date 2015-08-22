@@ -9,7 +9,12 @@ exception ParserException of string
 
 open Lexer
 module Formmater =
-    let list2str (ls: char list) = String.Concat ls
+    let list2str (ls: char list) = 
+        let rec _list2str ls rs =
+            match ls with
+            |[] -> rs
+            |x::xs -> _list2str xs (rs + x.ToString())
+        _list2str ls ""
     let rec readObject = 
         let parserObject = cons (token (char '{')) (fun _->
                 cons readKeyValues (fun kvs->

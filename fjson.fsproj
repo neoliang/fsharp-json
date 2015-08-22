@@ -7,6 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>fjson</RootNamespace>
     <AssemblyName>fjson</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,11 +32,14 @@
     </DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core" />
+    <Reference Include="mscorlib">
+      <HintPath>packages\mscorlib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="FSharp.Core">
+      <HintPath>packages\FSharp.Core.3.0.0.2\lib\net20\FSharp.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JValue.fs" />
@@ -46,4 +50,7 @@
     <Compile Include="IO.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>

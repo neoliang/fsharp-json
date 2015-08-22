@@ -5,7 +5,7 @@ open System.Collections.Generic
 open fjson
 open fjson.parser
 open fjson.parser.Formmater
-open fjson.parser.Helper
+open fjson.parser.Lexer
 [<EntryPoint>]
 let main argv = 
 
@@ -39,13 +39,15 @@ let main argv =
         let yy1 = render.pretty xx1 2
         //let xx =  readBool (List.ofSeq "true") //|> should  equal (Some (Bool true ,List.ofSeq "") )
         printfn "%s\n%s\n%s %A" ss  yy yy1 (ss = yy1)
-        let builder = new parser.parserHelperBuilder()
+        let builder = new parser.LexerBuilder()
         let parserHex  xs = builder.hexaDecimal (List.ofSeq xs)
         let y = parserHex "1234fx"
         let i = builder.char 'h' (List.ofSeq "xhello")
-        let builder = new parser.parserHelperBuilder()
         let x = builder.Return(PError (List.ofSeq "hello")) "xx"
         printfn "%A\n%A\n%A" y i x
 
     ``test read``()
+    let x = list2str (List.ofSeq "47")
+    let y = double x
+    printfn "%s %f" x y
     0

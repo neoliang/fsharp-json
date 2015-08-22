@@ -5,7 +5,7 @@ open System
 open System.Collections.Generic
 open fjson
 module formmater =
-    let list2str (ls: char list) = String.Concat ls
+    let list2str = Formmater.list2str
     let _b = new LexerBuilder()
     let rec readObject = _b{
             let! _ = _b.token (_b.char '{')
