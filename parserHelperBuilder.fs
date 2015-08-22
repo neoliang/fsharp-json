@@ -11,6 +11,7 @@ type parserHelperBuilder() =
         PError inp
     member this.Zero() = 
         this.Failure()
+    member this.ReturnFrom(x) = x
     member this.Return(x) =
         fun inp -> PR(x,inp)
     member this.Bind(ma,amb) = fun inp ->
@@ -27,7 +28,7 @@ type parserHelperBuilder() =
             if f x then 
                 return x 
             else 
-                this.Failure()
+                return! this.Failure()
         }
     member this.char ch = this.sat (fun x -> x = ch)
     member this.chars ch = fun inp ->

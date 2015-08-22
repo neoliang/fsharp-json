@@ -25,6 +25,14 @@ type JValue =
   member private v.getValueException (t:string) = 
     (JValueConvertException("can't convert " + v.ToString() + "to " + t))
 
+  static member createObj kvs =
+    let addKV (obj:JObject) (k,v) = 
+            obj.Add(k,v)
+            obj
+    Obj (Seq.fold addKV (new JObject()) kvs) 
+  static member createArr (vs: JValue seq) = 
+    Arr (List vs)
+
   //type check
   member v.isNull() =
     match v with

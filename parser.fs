@@ -19,10 +19,7 @@ module Formmater =
                 )
             )
         cons parserObject (fun kvs ->
-            let addKV (obj:JObject) (k,v) = 
-                    obj.Add(k,v)
-                    obj
-            ret (Obj (Seq.fold addKV (new JObject()) kvs))
+            ret (JValue.createObj kvs)
         )
     and  readKeyValues = 
         many (cons readkv (fun kv ->
@@ -50,7 +47,7 @@ module Formmater =
         )
         cons parserArray (fun vs ->
             cons (char ']') (fun _ ->
-                ret (Arr (List vs))
+                ret (JValue.createArr vs)
             )
         )
     and readBool = cons (select (token (str "true")) (token (str "false"))) (fun r->
